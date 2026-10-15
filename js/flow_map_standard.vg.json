@@ -1,7 +1,7 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
   "width": "container",
-  "height": 410,
+  "height": 500,
   "params": [
     {
       "name": "Year_selection",
@@ -51,9 +51,9 @@
             "range": ["#FF5A1F", "#2D4BFF", "#F2B600", "#A9A6C4"]
           },
           "legend": {
-            "orient": "none",
-            "legendX": 10,
-            "legendY": 262,
+            "orient": "bottom",
+            "direction": "horizontal",
+            "columnPadding": 14,
             "symbolType": "circle",
             "labelLimit": 200
           }
@@ -119,9 +119,7 @@
                   "title": "Flow value (US$)",
                   "scale": {"type": "sqrt", "domain": [0, 60000], "range": [1.2, 13]},
                   "legend": {
-                    "orient": "none",
-                    "legendX": 10,
-                    "legendY": 360,
+                    "orient": "bottom",
                     "values": [5000, 20000, 50000],
                     "symbolType": "stroke",
                     "symbolStrokeColor": "#7A7893",

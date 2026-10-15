@@ -273,7 +273,7 @@ h1 span { color: var(--volt); }
 .chart .vega-embed { width: 100%; }
 #symbol_map { min-width: 1170px; }
 #sankey { min-width: 1190px; }
-#flow_map, #choropleth_map { min-width: 520px; }
+#flow_map, #choropleth_map { min-width: 880px; }
 #bump_chart, #treemap, #premium_line, #cohort_heatmap, #price_density { min-width: 420px; }
 
 /* Vega-Lite bound inputs (year sliders) */
