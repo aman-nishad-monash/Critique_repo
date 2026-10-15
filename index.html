@@ -110,7 +110,7 @@
           <div class="plot"><div id="flow_map" class="chart"></div></div>
           <p class="key"><b>How to read:</b> arrow width = value; colour = exporting region.
             Hover for details; click a region to show only its flows (double-click to reset).</p>
-          <p class="footnote">The map is centred on the Pacific. The Europe to North America arrow crosses the Atlantic, so it leaves on the left and returns on the right.</p>
+          <p class="footnote">Arrows from Asia to the Americas cross the Pacific, so they leave the map on the right and return on the left.</p>
         </figure>
 
         <figure class="card chart-card span-6">
@@ -447,10 +447,10 @@
     var vg_1 = "js/symbol_map.vg.json";
     vegaEmbed("#symbol_map", vg_1, {"actions": false}).catch(console.error);
 
-    // Flow map: Pacific-centred version. For the Greenwich-centred version use the next line instead,
+    // Flow map: Greenwich-centred (standard Equal Earth) version. For the Pacific-centred version use the line above instead,
     // and change the footnote under the flow map.
-    // var vg_2 = "js/flow_map_standard.vg.json";
-    var vg_2 = "js/flow_map.vg.json";
+    // var vg_2 = "js/flow_map.vg.json";
+    var vg_2 = "js/flow_map_standard.vg.json";
     vegaEmbed("#flow_map", vg_2, {"actions": false}).catch(console.error);
 
     var vg_3 = "js/choropleth_map.vg.json";
