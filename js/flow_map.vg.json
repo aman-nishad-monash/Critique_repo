@@ -1,0 +1,287 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": "container",
+  "height": 300,
+  "params": [
+    {
+      "name": "Year_selection",
+      "value": 2024,
+      "bind": {"input": "range", "min": 2002, "max": 2024, "step": 1, "name": "Year: "}
+    }
+  ],
+  "projection": {
+    "type": "equalEarth",
+    "rotate": [-150, 0, 0],
+    "scale": {"expr": "min(width / 5.4133, height / 2.3783)"},
+    "translate": {
+      "expr": "[width / 2, height / 2 + min(width / 5.4133, height / 2.3783) * 0.12825]"
+    }
+  },
+  "layer": [
+    {
+      "data": {"url": "data/oceans.topojson", "format": {"type": "topojson", "feature": "oceans"}},
+      "mark": {"type": "geoshape", "fill": "#DDE3FF", "clip": true}
+    },
+    {
+      "data": {
+        "url": "data/ne_110m_admin_0_countries.topojson",
+        "format": {"type": "topojson", "feature": "ne_110m_admin_0_countries"}
+      },
+      "transform": [{"filter": "datum.properties.ADM0_A3 != 'ATA'"}],
+      "mark": {
+        "type": "geoshape",
+        "fill": "white",
+        "stroke": "#B9BEE0",
+        "strokeWidth": 0.5,
+        "clip": true
+      }
+    },
+    {
+      "data": {
+        "url": "data/baci_routes.geojson",
+        "format": {"type": "json", "property": "features"}
+      },
+      "transform": [{"filter": "datum.properties.year == Year_selection"}],
+      "encoding": {
+        "color": {
+          "field": "properties.colour_group",
+          "type": "nominal",
+          "title": "Exporting region",
+          "scale": {
+            "domain": ["Southeast Asia", "East Asia", "Europe", "Other regions"],
+            "range": ["#FF5A1F", "#2D4BFF", "#F2B600", "#A9A6C4"]
+          },
+          "legend": {
+            "orient": "bottom",
+            "direction": "horizontal",
+            "columnPadding": 14,
+            "symbolType": "circle",
+            "labelLimit": 200
+          }
+        }
+      },
+      "layer": [
+        {
+          "transform": [{"filter": "datum.properties.part != 'place'"}],
+          "encoding": {
+            "opacity": {
+              "condition": [
+                {
+                  "test": "isDefined(region_pick.region) && !(indexof(region_pick.region, datum.properties.exp_region) >= 0 || indexof(region_pick.region, datum.properties.imp_region) >= 0)",
+                  "value": 0.05
+                },
+                {
+                  "test": "isDefined(region_pick.region) && (indexof(region_pick.region, datum.properties.exp_region) >= 0 || indexof(region_pick.region, datum.properties.imp_region) >= 0)",
+                  "value": 0.85
+                },
+                {"param": "flow_hover", "empty": true, "value": 0.8}
+              ],
+              "value": 0.12
+            },
+            "tooltip": [
+              {"field": "properties.rank", "type": "quantitative", "title": "Flow rank"},
+              {"field": "properties.exp_region", "type": "nominal", "title": "From"},
+              {"field": "properties.imp_region", "type": "nominal", "title": "To"},
+              {
+                "field": "properties.value_usd_m",
+                "type": "quantitative",
+                "title": "Value (US$ million)",
+                "format": ",.0f"
+              },
+              {
+                "field": "properties.world_share",
+                "type": "quantitative",
+                "title": "Share of world trade",
+                "format": ".1%"
+              },
+              {"field": "properties.sent_by", "type": "nominal", "title": "Sent mostly by"},
+              {"field": "properties.bought_by", "type": "nominal", "title": "Bought mostly by"}
+            ]
+          },
+          "layer": [
+            {
+              "transform": [{"filter": "datum.properties.part == 'line'"}],
+              "params": [
+                {
+                  "name": "flow_hover",
+                  "select": {
+                    "type": "point",
+                    "fields": ["properties.rank"],
+                    "on": "pointerover[event.item && event.item.datum && event.item.datum.properties && event.item.datum.properties.part != 'place']",
+                    "clear": "pointerout"
+                  }
+                }
+              ],
+              "mark": {"type": "geoshape", "filled": false, "strokeCap": "round", "clip": true},
+              "encoding": {
+                "strokeWidth": {
+                  "field": "properties.value_usd_m",
+                  "type": "quantitative",
+                  "title": "Flow value (US$)",
+                  "scale": {"type": "sqrt", "domain": [0, 60000], "range": [1.2, 13]},
+                  "legend": {
+                    "orient": "bottom",
+                    "values": [5000, 20000, 50000],
+                    "symbolType": "stroke",
+                    "symbolStrokeColor": "#7A7893",
+                    "labelExpr": "'$' + format(datum.value / 1000, ',.0f') + ' bn'",
+                    "direction": "horizontal",
+                    "columnPadding": 8
+                  }
+                },
+                "order": {"field": "properties.value_usd_m", "sort": "ascending"}
+              }
+            },
+            {
+              "transform": [{"filter": "datum.properties.part == 'arrow'"}],
+              "mark": {"type": "geoshape", "filled": true, "strokeWidth": 0, "clip": true}
+            }
+          ]
+        },
+        {
+          "transform": [
+            {"filter": "datum.properties.part == 'place'"},
+            {"calculate": "datum.properties.region", "as": "region"},
+            {"calculate": "datum.properties.region == 'Latin America & Caribbean' ? datum.properties.label_lon - 14 : datum.properties.label_lon", "as": "lab_lon"}
+          ],
+          "encoding": {
+            "tooltip": [
+              {"field": "properties.region", "type": "nominal", "title": "Region"},
+              {
+                "field": "properties.exports_usd_m",
+                "type": "quantitative",
+                "title": "Exports (US$ million)",
+                "format": ",.0f"
+              },
+              {
+                "field": "properties.export_share",
+                "type": "quantitative",
+                "title": "Share of world exports",
+                "format": ".1%"
+              },
+              {
+                "field": "properties.imports_usd_m",
+                "type": "quantitative",
+                "title": "Imports (US$ million)",
+                "format": ",.0f"
+              },
+              {
+                "field": "properties.within_usd_m",
+                "type": "quantitative",
+                "title": "Trade within the region (US$ million)",
+                "format": ",.0f"
+              },
+              {
+                "field": "properties.top_exporters",
+                "type": "nominal",
+                "title": "Biggest exporters (share)"
+              },
+              {
+                "field": "properties.top_buyers",
+                "type": "nominal",
+                "title": "Biggest buyers (share)"
+              }
+            ]
+          },
+          "layer": [
+            {
+              "mark": {
+                "type": "circle",
+                "opacity": 1,
+                "stroke": "white",
+                "strokeWidth": 1.5,
+                "clip": true
+              },
+              "encoding": {
+                "longitude": {"field": "properties.lon", "type": "quantitative"},
+                "latitude": {"field": "properties.lat", "type": "quantitative"},
+                "size": {
+                  "field": "properties.exports_usd_m",
+                  "type": "quantitative",
+                  "scale": {"type": "sqrt", "domain": [0, 150000], "range": [25, 700]},
+                  "legend": null
+                }
+              }
+            },
+            {
+              "mark": {
+                "type": "text",
+                "stroke": "white",
+                "strokeWidth": 3.5,
+                "strokeJoin": "round",
+                "clip": true
+              },
+              "encoding": {
+                "longitude": {"field": "lab_lon", "type": "quantitative"},
+                "latitude": {"field": "properties.label_lat", "type": "quantitative"},
+                "text": {"field": "properties.region"},
+                "color": {"value": "white"}
+              }
+            },
+            {
+              "params": [
+                {
+                  "name": "region_pick",
+                  "select": {
+                    "type": "point",
+                    "fields": ["region"],
+                    "on": "click[event.item && event.item.datum && event.item.datum.region]",
+                    "clear": "dblclick"
+                  }
+                }
+              ],
+              "mark": {"type": "text", "cursor": "pointer", "clip": true},
+              "encoding": {
+                "longitude": {"field": "lab_lon", "type": "quantitative"},
+                "latitude": {"field": "properties.label_lat", "type": "quantitative"},
+                "text": {"field": "properties.region"},
+                "color": {"value": "#15131F"}
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "description": "Labels where the Europe to North America arrow crosses the map edge (shown only in years when that flow is in the top 15)",
+      "data": {"url": "data/baci_routes.geojson", "format": {"type": "json", "property": "features"}},
+      "transform": [
+        {"filter": "datum.properties.year == Year_selection && datum.properties.part == 'line' && datum.properties.exp_region == 'Europe' && datum.properties.imp_region == 'North America'"},
+        {"fold": ["left", "right"], "as": ["side", "unused"]},
+        {"calculate": "datum.side == 'left' ? -29 : -31", "as": "lon"},
+        {"calculate": "37", "as": "lat"},
+        {"calculate": "datum.side == 'left' ? '← to North America' : 'from Europe'", "as": "t"}
+      ],
+      "encoding": {
+        "longitude": {"field": "lon", "type": "quantitative"},
+        "latitude": {"field": "lat", "type": "quantitative"},
+        "text": {"field": "t"}
+      },
+      "layer": [
+        {
+          "transform": [{"filter": "datum.side == 'left'"}],
+          "mark": {"type": "text", "align": "left", "dy": 13, "fontSize": 10.5, "fontWeight": 500, "fontStyle": "italic", "color": "#9A7400"}
+        },
+        {
+          "transform": [{"filter": "datum.side == 'right'"}],
+          "mark": {"type": "text", "align": "right", "dy": -9, "fontSize": 10.5, "fontWeight": 500, "fontStyle": "italic", "color": "#9A7400"}
+        }
+      ]
+    }
+  ],
+  "config": {
+    "font": "DM Sans, 'Helvetica Neue', Arial, sans-serif",
+    "view": {"stroke": null},
+    "text": {
+      "font": "DM Sans, 'Helvetica Neue', Arial, sans-serif",
+      "fontSize": 12,
+      "fontWeight": 700
+    },
+    "legend": {
+      "labelFontSize": 12.5,
+      "titleFontSize": 12.5,
+      "titleColor": "#5C5A73",
+      "labelColor": "#15131F"
+    }
+  }
+}

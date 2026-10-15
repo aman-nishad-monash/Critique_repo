@@ -1,0 +1,205 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "Chart 5. Treemap of revenue by brand, nested in its company, latest fiscal year (US$ millions). Area = revenue. Built with Vega's stratify and treemap transforms.",
+  "height": 420,
+  "padding": 0,
+  "autosize": "none",
+  "signals": [
+    {
+      "name": "width",
+      "init": "containerSize()[0] || 560",
+      "on": [{"events": "window:resize", "update": "containerSize()[0] || 560"}]
+    },
+    {
+      "name": "hover_company",
+      "value": null,
+      "on": [
+        {"events": "@leaf:pointerover, @label:pointerover", "update": "datum.company"},
+        {"events": "@leaf:pointerout, @label:pointerout", "update": "null"}
+      ]
+    }
+  ],
+  "data": [
+    {
+      "name": "tree",
+      "url": "data/treemap_nodes.csv",
+      "format": {"type": "csv", "parse": {"usd_m": "number", "share": "number"}},
+      "transform": [
+        {"type": "stratify", "key": "id", "parentKey": "parent"},
+        {
+          "type": "treemap",
+          "field": "usd_m",
+          "sort": {"field": "value", "order": "descending"},
+          "method": "squarify",
+          "ratio": 1.4,
+          "round": true,
+          "paddingInner": 2,
+          "size": [{"signal": "width"}, {"signal": "height"}]
+        }
+      ]
+    },
+    {
+      "name": "companies",
+      "source": "tree",
+      "transform": [{"type": "filter", "expr": "datum.depth === 1"}]
+    },
+    {
+      "name": "leaves",
+      "source": "tree",
+      "transform": [
+        {"type": "filter", "expr": "datum.depth === 2"},
+        {
+          "type": "formula",
+          "expr": "'$' + format(datum.usd_m / 1000, ',.1f') + ' bn'",
+          "as": "value_label"
+        },
+        {"type": "formula", "expr": "datum.x1 - datum.x0", "as": "w"},
+        {"type": "formula", "expr": "datum.y1 - datum.y0", "as": "h"},
+        {"type": "formula", "expr": "datum.w > 170 && datum.h > 110", "as": "big"}
+      ]
+    }
+  ],
+  "scales": [
+    {
+      "name": "colour",
+      "type": "ordinal",
+      "domain": [
+        "Nike",
+        "Jordan",
+        "Converse",
+        "adidas",
+        "ANTA",
+        "FILA",
+        "Other ANTA brands",
+        "PUMA",
+        "Skechers",
+        "ASICS",
+        "HOKA",
+        "UGG",
+        "Other Deckers brands",
+        "Crocs",
+        "HEYDUDE"
+      ],
+      "range": [
+        "#FF5A1F",
+        "#B83A00",
+        "#FFA680",
+        "#15131F",
+        "#E6007E",
+        "#A3005A",
+        "#FF9AD0",
+        "#6D6A85",
+        "#8C89A3",
+        "#A6A3BA",
+        "#7B7893",
+        "#9A97B0",
+        "#C5C3D4",
+        "#8F8CA6",
+        "#B2B0C4"
+      ]
+    }
+  ],
+  "marks": [
+    {
+      "name": "leaf",
+      "type": "rect",
+      "from": {"data": "leaves"},
+      "encode": {
+        "enter": {
+          "x": {"field": "x0"},
+          "y": {"field": "y0"},
+          "x2": {"field": "x1"},
+          "y2": {"field": "y1"},
+          "fill": {"scale": "colour", "field": "name"},
+          "cursor": {"value": "pointer"},
+          "tooltip": {
+            "signal": "{'Brand': datum.name, 'Company': datum.company, 'Revenue': '$' + format(datum.usd_m, ',.0f') + ' million', 'Financial year': datum.fiscal_year, 'Share of the eight companies': format(datum.share, '.1%')}"
+          }
+        },
+        "update": {
+          "opacity": {"signal": "hover_company && hover_company !== datum.company ? 0.35 : 1"}
+        }
+      }
+    },
+    {
+      "type": "rect",
+      "from": {"data": "companies"},
+      "interactive": false,
+      "encode": {
+        "enter": {
+          "x": {"field": "x0"},
+          "y": {"field": "y0"},
+          "x2": {"field": "x1"},
+          "y2": {"field": "y1"},
+          "fill": {"value": "transparent"},
+          "stroke": {"value": "#FFFFFF"},
+          "strokeWidth": {"value": 4}
+        }
+      }
+    },
+    {
+      "name": "label",
+      "type": "text",
+      "from": {"data": "leaves"},
+      "encode": {
+        "enter": {
+          "x": {"signal": "datum.x0 + 8"},
+          "y": {"signal": "datum.y0 + 20"},
+          "text": {"signal": "datum.w > 62 && datum.h > 30 ? datum.name : ''"},
+          "limit": {"signal": "datum.w - 12"},
+          "fontSize": {"signal": "datum.big ? 22 : 13"},
+          "fontWeight": {"value": 700},
+          "fill": {"signal": "luminance(scale('colour', datum.name)) > 0.33 ? '#15131F' : 'white'"},
+          "tooltip": {
+            "signal": "{'Brand': datum.name, 'Company': datum.company, 'Revenue': '$' + format(datum.usd_m, ',.0f') + ' million', 'Financial year': datum.fiscal_year, 'Share of the eight companies': format(datum.share, '.1%')}"
+          }
+        },
+        "update": {
+          "opacity": {"signal": "hover_company && hover_company !== datum.company ? 0.35 : 1"}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "from": {"data": "leaves"},
+      "interactive": false,
+      "encode": {
+        "enter": {
+          "x": {"signal": "datum.x0 + 8"},
+          "y": {"signal": "datum.y0 + (datum.big ? 42 : 36)"},
+          "text": {"signal": "datum.w > 62 && datum.h > 46 ? datum.value_label : ''"},
+          "limit": {"signal": "datum.w - 12"},
+          "fontSize": {"signal": "datum.big ? 15 : 12"},
+          "fill": {"signal": "luminance(scale('colour', datum.name)) > 0.33 ? '#15131F' : 'white'"},
+          "fillOpacity": {"value": 0.85}
+        },
+        "update": {
+          "opacity": {"signal": "hover_company && hover_company !== datum.company ? 0.35 : 1"}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "from": {"data": "leaves"},
+      "interactive": false,
+      "encode": {
+        "enter": {
+          "x": {"signal": "datum.x0 + 8"},
+          "y": {"signal": "datum.y0 + (datum.big ? 62 : 52)"},
+          "text": {
+            "signal": "datum.w > 62 && datum.h > 64 && datum.company !== datum.name ? datum.company : ''"
+          },
+          "limit": {"signal": "datum.w - 12"},
+          "fontSize": {"value": 11},
+          "fontStyle": {"value": "italic"},
+          "fill": {"signal": "luminance(scale('colour', datum.name)) > 0.33 ? '#15131F' : 'white'"},
+          "fillOpacity": {"value": 0.85}
+        },
+        "update": {
+          "opacity": {"signal": "hover_company && hover_company !== datum.company ? 0.35 : 1"}
+        }
+      }
+    }
+  ],
+  "config": {"text": {"font": "DM Sans, 'Helvetica Neue', Arial, sans-serif"}}
+}

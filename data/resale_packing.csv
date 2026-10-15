@@ -1,0 +1,80 @@
+id,parent,name,brand,n_models,median_premium,collab_share
+root,,All brands,,,,
+ASICS,root,ASICS,ASICS,,,
+Jordan,root,Jordan,Jordan,,,
+Nike,root,Nike,Nike,,,
+PUMA,root,PUMA,PUMA,,,
+Vans,root,Vans,Vans,,,
+adidas,root,adidas,adidas,,,
+ASICS|ASICS Gel-Lyte III,ASICS,ASICS Gel-Lyte III,ASICS,90,0.2248,0.5111
+ASICS|ASICS Gel-Lyte V,ASICS,ASICS Gel-Lyte V,ASICS,52,-0.1332,0.5769
+ASICS|ASICS Gel-Respector,ASICS,ASICS Gel-Respector,ASICS,9,0.0,0.4444
+ASICS|ASICS GT-II,ASICS,ASICS GT-II,ASICS,8,0.5391,0.75
+ASICS|ASICS Gel Mai,ASICS,ASICS Gel Mai,ASICS,6,-0.3061,0.6667
+ASICS|ASICS Gel-Delva 1,ASICS,ASICS Gel-Delva 1,ASICS,6,-0.2717,0.0
+ASICS|ASICS Gel-Sight,ASICS,ASICS Gel-Sight,ASICS,5,-0.0278,0.4
+ASICS|ASICS Onitsuka Tiger Colorado 85,ASICS,ASICS Onitsuka Tiger Colorado 85,ASICS,4,-0.0352,0.5
+ASICS|ASICS Gel-Saga,ASICS,ASICS Gel-Saga,ASICS,4,-0.1055,0.75
+ASICS|ASICS Gel-Diablo,ASICS,ASICS Gel-Diablo,ASICS,3,-0.0286,0.3333
+ASICS|ASICS Gel-Burz 2,ASICS,ASICS Gel-Burz 2,ASICS,3,0.0,0.0
+ASICS|ASICS Gel-Lyte OG,ASICS,ASICS Gel-Lyte OG,ASICS,3,0.2917,0.0
+Jordan|Jordan 1 Retro,Jordan,Jordan 1 Retro,Jordan,177,0.4286,0.0226
+Jordan|Jordan 1 Retro High,Jordan,Jordan 1 Retro High,Jordan,136,0.15,0.0662
+Jordan|Jordan 1 Mid,Jordan,Jordan 1 Mid,Jordan,110,0.1292,0.0
+Jordan|Jordan 4 Retro,Jordan,Jordan 4 Retro,Jordan,101,0.2812,0.1287
+Jordan|Jordan 5 Retro,Jordan,Jordan 5 Retro,Jordan,100,0.1689,0.03
+Jordan|Jordan 12 Retro,Jordan,Jordan 12 Retro,Jordan,96,0.1434,0.0
+Jordan|Jordan 3 Retro,Jordan,Jordan 3 Retro,Jordan,80,0.2219,0.0125
+Jordan|Jordan 6 Retro,Jordan,Jordan 6 Retro,Jordan,79,0.1667,0.0127
+Jordan|Jordan 13 Retro,Jordan,Jordan 13 Retro,Jordan,70,0.1135,0.0
+Jordan|Jordan 11 Retro Low,Jordan,Jordan 11 Retro Low,Jordan,64,0.3913,0.0
+Jordan|Jordan 10 Retro,Jordan,Jordan 10 Retro,Jordan,64,-0.0789,0.0
+Jordan|Jordan 7 Retro,Jordan,Jordan 7 Retro,Jordan,59,0.2947,0.0
+Nike|Nike Air Force 1 Low,Nike,Nike Air Force 1 Low,Nike,255,0.128,0.1098
+Nike|Nike Air Max 1,Nike,Nike Air Max 1,Nike,176,0.0333,0.0625
+Nike|Nike Air Max 95,Nike,Nike Air Max 95,Nike,140,-0.1833,0.0571
+Nike|Nike Air Max 97,Nike,Nike Air Max 97,Nike,125,0.0,0.056
+Nike|Nike Air Max 90,Nike,Nike Air Max 90,Nike,115,0.1538,0.0783
+Nike|Nike Dunk SB Low,Nike,Nike Dunk SB Low,Nike,112,0.6854,0.0357
+Nike|Nike Air Foamposite One,Nike,Nike Air Foamposite One,Nike,106,0.0674,0.0189
+Nike|Nike Air Max 270,Nike,Nike Air Max 270,Nike,69,-0.0533,0.0
+Nike|Nike Air VaporMax,Nike,Nike Air VaporMax,Nike,68,0.1083,0.0735
+Nike|Nike SB Dunk Low,Nike,Nike SB Dunk Low,Nike,67,2.0556,0.0896
+Nike|Nike Air Max Plus,Nike,Nike Air Max Plus,Nike,61,-0.0625,0.0
+Nike|Nike Dunk SB High,Nike,Nike Dunk SB High,Nike,60,0.3618,0.1167
+PUMA|Puma Clyde,PUMA,Puma Clyde,PUMA,16,-0.3731,0.4375
+PUMA|Puma Suede,PUMA,Puma Suede,PUMA,12,-0.3955,0.1667
+PUMA|Puma RS-X,PUMA,Puma RS-X,PUMA,12,-0.0651,0.0
+PUMA|Puma Suede Classic,PUMA,Puma Suede Classic,PUMA,11,-0.2929,0.0
+PUMA|Puma Blaze Of Glory,PUMA,Puma Blaze Of Glory,PUMA,9,-0.0667,0.3333
+PUMA|Puma Creepers,PUMA,Puma Creepers,PUMA,9,0.2143,0.0
+PUMA|Puma RS-0,PUMA,Puma RS-0,PUMA,9,-0.2,0.0
+PUMA|Puma Fur Slide,PUMA,Puma Fur Slide,PUMA,7,0.2375,0.0
+PUMA|Puma Clyde Court Disrupt,PUMA,Puma Clyde Court Disrupt,PUMA,7,-0.275,0.0
+PUMA|Puma RS-100,PUMA,Puma RS-100,PUMA,6,-0.1806,0.0
+PUMA|Puma Disc Blaze,PUMA,Puma Disc Blaze,PUMA,6,-0.1667,0.6667
+PUMA|Puma Thunder Spectra,PUMA,Puma Thunder Spectra,PUMA,5,-0.3667,0.0
+Vans|Vans Old Skool,Vans,Vans Old Skool,Vans,53,0.2,0.1698
+Vans|Vans Sk8-Hi,Vans,Vans Sk8-Hi,Vans,51,0.3333,0.1961
+Vans|Vans Slip-On,Vans,Vans Slip-On,Vans,33,0.075,0.0303
+Vans|Vans Authentic,Vans,Vans Authentic,Vans,27,0.2308,0.1852
+Vans|Vans Era,Vans,Vans Era,Vans,14,0.2784,0.2857
+Vans|Vans Style 36,Vans,Vans Style 36,Vans,7,0.5867,0.1429
+Vans|Vans Sk8-Mid,Vans,Vans Sk8-Mid,Vans,6,0.5682,1.0
+Vans|Vans Sk8-Hi MTE,Vans,Vans Sk8-Hi MTE,Vans,5,0.4455,0.0
+Vans|Vans Sk8-Hi Re-Issue,Vans,Vans Sk8-Hi Re-Issue,Vans,4,0.0742,0.0
+Vans|Vans Sk8-Hi Zip,Vans,Vans Sk8-Hi Zip,Vans,4,-0.0222,0.5
+Vans|Vans Sid Pro,Vans,Vans Sid Pro,Vans,4,0.3636,1.0
+Vans|Vans Slip-On 47 V DX,Vans,Vans Slip-On 47 V DX,Vans,3,1.93,1.0
+adidas|adidas NMD R1,adidas,adidas NMD R1,adidas,242,0.058,0.0455
+adidas|adidas Ultra Boost 4.0,adidas,adidas Ultra Boost 4.0,adidas,76,-0.2542,0.0395
+adidas|adidas NMD R2,adidas,adidas NMD R2,adidas,62,-0.3746,0.0484
+adidas|adidas Ultra Boost 3.0,adidas,adidas Ultra Boost 3.0,adidas,53,-0.1222,0.0
+adidas|adidas Ultra Boost Uncaged,adidas,adidas Ultra Boost Uncaged,adidas,51,-0.2778,0.0196
+adidas|adidas Stan Smith,adidas,adidas Stan Smith,adidas,49,-0.2,0.6327
+adidas|adidas Ultra Boost 1.0,adidas,adidas Ultra Boost 1.0,adidas,40,0.75,0.075
+adidas|adidas NMD XR1,adidas,adidas NMD XR1,adidas,37,-0.0733,0.0
+adidas|adidas Ultra Boost 2.0,adidas,adidas Ultra Boost 2.0,adidas,36,0.1083,0.0
+adidas|adidas I-5923,adidas,adidas I-5923,adidas,33,-0.5,0.0606
+adidas|adidas EQT Support ADV,adidas,adidas EQT Support ADV,adidas,33,-0.2,0.0606
+adidas|adidas Iniki Runner,adidas,adidas Iniki Runner,adidas,28,-0.2167,0.0357

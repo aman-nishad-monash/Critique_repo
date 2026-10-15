@@ -1,0 +1,153 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": "container",
+  "height": 330,
+  "data": {
+    "url": "data/company_rank.csv",
+    "format": {
+      "type": "csv",
+      "parse": {
+        "chart_year": "number",
+        "fiscal_year": "number",
+        "rank": "number",
+        "revenue_usd_m": "number"
+      }
+    }
+  },
+  "transform": [
+    {
+      "calculate": "indexof(['Nike', 'adidas', 'ANTA'], datum.company) >= 0 ? datum.company : 'Other companies'",
+      "as": "colour_group"
+    },
+    {"calculate": "'$' + format(datum.revenue_usd_m / 1000, ',.1f') + ' bn'", "as": "revenue_label"},
+    {"calculate": "datum.note == '' ? '—' : datum.note", "as": "note_text"}
+  ],
+  "encoding": {
+    "x": {
+      "field": "chart_year",
+      "type": "ordinal",
+      "title": null,
+      "axis": {
+        "labelAngle": 0,
+        "labelFontSize": 13,
+        "labelFontWeight": 600,
+        "domain": false,
+        "ticks": false,
+        "labelPadding": 10
+      },
+      "scale": {"paddingOuter": 0.55}
+    },
+    "y": {
+      "field": "rank",
+      "type": "ordinal",
+      "title": null,
+      "axis": null,
+      "scale": {"domain": [1, 2, 3, 4, 5, 6, 7, 8]}
+    },
+    "color": {
+      "field": "colour_group",
+      "type": "nominal",
+      "scale": {
+        "domain": ["Nike", "adidas", "ANTA", "Other companies"],
+        "range": ["#FF5A1F", "#15131F", "#E6007E", "#B9B6D0"]
+      },
+      "legend": null
+    },
+    "opacity": {"condition": {"param": "company_pick", "empty": true, "value": 1}, "value": 0.15},
+    "tooltip": [
+      {"field": "company", "type": "nominal", "title": "Company"},
+      {"field": "chart_year", "type": "ordinal", "title": "Plotted year"},
+      {"field": "fiscal_year", "type": "ordinal", "title": "Financial year"},
+      {"field": "rank", "type": "ordinal", "title": "Rank"},
+      {
+        "field": "revenue_usd_m",
+        "type": "quantitative",
+        "title": "Revenue (US$ million)",
+        "format": ",.0f"
+      },
+      {"field": "currency", "type": "nominal", "title": "Reported in"},
+      {"field": "note_text", "type": "nominal", "title": "Note"}
+    ]
+  },
+  "layer": [
+    {
+      "mark": {"type": "line", "interpolate": "monotone", "strokeCap": "round"},
+      "encoding": {
+        "detail": {"field": "company"},
+        "strokeWidth": {
+          "condition": {"test": "datum.colour_group != 'Other companies'", "value": 4},
+          "value": 2.5
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "circle",
+        "size": 520,
+        "opacity": 1,
+        "stroke": "white",
+        "strokeWidth": 2,
+        "cursor": "pointer"
+      },
+      "params": [
+        {
+          "name": "company_pick",
+          "select": {"type": "point", "fields": ["company"], "on": "click", "clear": "dblclick"}
+        }
+      ]
+    },
+    {
+      "mark": {"type": "text", "fontSize": 11.5, "fontWeight": 700, "color": "white"},
+      "encoding": {"text": {"field": "rank"}, "color": {"value": "white"}}
+    },
+    {
+      "transform": [{"filter": "datum.note != ''"}],
+      "mark": {"type": "text", "text": "*", "dx": 13, "dy": -11, "fontSize": 16, "fontWeight": 700}
+    },
+    {
+      "transform": [{"filter": "datum.chart_year == 2024"}],
+      "mark": {"type": "text", "align": "left", "dx": 18, "fontSize": 13, "fontWeight": 700},
+      "encoding": {
+        "text": {"field": "company"},
+        "color": {
+          "condition": {"test": "datum.colour_group == 'Other companies'", "value": "#45425E"},
+          "field": "colour_group",
+          "type": "nominal",
+          "legend": null
+        }
+      }
+    },
+    {
+      "transform": [{"filter": "datum.chart_year == 2024"}],
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "dx": 18,
+        "dy": 14,
+        "fontSize": 11.5,
+        "fontWeight": 400,
+        "color": "#5C5A73"
+      },
+      "encoding": {"text": {"field": "revenue_label"}, "color": {"value": "#5C5A73"}}
+    },
+    {
+      "transform": [{"filter": "datum.chart_year == 2019"}],
+      "mark": {"type": "text", "align": "right", "dx": -18, "fontSize": 11.5, "fontWeight": 400},
+      "encoding": {"text": {"field": "revenue_label"}, "color": {"value": "#5C5A73"}}
+    },
+    {
+      "description": "Callout: ANTA's climb, written in the gap between ranks 3 and 4",
+      "data": {"values": [{"chart_year": 2022, "rank": 3, "t": "ANTA passes Skechers, then PUMA"}]},
+      "transform": [],
+      "mark": {"type": "text", "dy": 20, "dx": -40, "fontSize": 11.5, "fontWeight": 700, "fontStyle": "italic"},
+      "encoding": {"text": {"field": "t"}, "color": {"value": "#E6007E"}, "opacity": {"value": 1}, "tooltip": null}
+    }
+  ],
+  "config": {
+    "font": "DM Sans, 'Helvetica Neue', Arial, sans-serif",
+    "view": {"stroke": null},
+    "padding": {"left": 20, "right": 110, "top": 10, "bottom": 5},
+    "axis": {"labelColor": "#15131F"},
+    "text": {"font": "DM Sans, 'Helvetica Neue', Arial, sans-serif"}
+  }
+}

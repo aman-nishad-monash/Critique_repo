@@ -1,0 +1,31 @@
+id,brand,name_main,grp,release_year,retail,typical_resale,multiple,n_days,sold_12m,rk
+1b47fe22-067b-4786-adab-49096adeab27,Nike,Nike Dunk SB Low Supreme Black Cement (2002),Collaboration,2002,65.0000,1390.0000,21.3846,1737,9.0000,1
+8f377f6b-4451-4d6d-8b27-6d2c4f451f08,Nike,Nike Dunk High Pro SB Supreme Red Stars,Collaboration,2003,75.0000,1600.0000,21.3333,1404,4.0000,2
+ba1d88c3-b08c-4a97-b038-019c8357fa8d,Nike,Nike Kobe 1 Protro Undefeated Flight Jacket,Collaboration,2018,180.0000,3500.0000,19.4444,552,16.0000,3
+5996b5dd-14a2-4747-bcd1-81f10e05ac46,Nike,Nike Dunk SB Low Medicom 2,Collaboration,2004,65.0000,1250.0000,19.2308,2523,2.0000,4
+5e96fba2-0758-4c75-98f2-306e8d85615b,Nike,Nike SB Dunk High Supreme Orange,Collaboration,2003,65.0000,1250.0000,19.2308,747,7.0000,5
+a8784331-6f4e-455b-854b-8081b320fbbe,Nike,Nike Air Yeezy 2 Solar Red,Collaboration,2012,250.0000,3980.0000,15.9200,984,28.0000,6
+2a748b73-917f-4800-8d27-47ab89f7ca49,Nike,Nike Air Force 1 Low Virgil Abloh Off-White (AF100),Collaboration,2017,150.0000,2350.0000,15.6667,949,24.0000,7
+af060a4a-c5a2-466f-a326-64542af8df35,adidas,adidas Pharrell NMD HU China Pack Happy (Gold) (Friends and Family),Collaboration,2018,250.0000,3764.0000,15.0560,668,3.0000,8
+9ab86011-8df9-488e-b46e-90de955835f5,Nike,Nike Air Max 1 Patta Lucky Green,Collaboration,2010,120.0000,1800.0000,15.0000,853,0.0000,9
+adc381d2-1672-45a6-a99c-ff14ace9345a,Nike,Nike Dunk High Pro SB Supreme Blue Stars,Collaboration,2003,75.0000,1100.0000,14.6667,1283,6.0000,10
+7f9c67ff-2cd4-4e27-8b64-518900a1bc0b,Jordan,Jordan 1 Retro High Off-White Chicago,Collaboration,2017,190.0000,2710.0000,14.2632,1056,555.0000,11
+e45b1ed6-fb66-4c47-bd73-baccc3f68475,Nike,Nike Air Max 1 Patta Purple Denim,Collaboration,2009,120.0000,1699.0000,14.1583,845,0.0000,12
+b6ff0f2c-398b-499a-8d94-b3968fe2ba44,Nike,Nike Air Yeezy 2 Pure Platinum,Collaboration,2012,250.0000,3477.0000,13.9080,1778,26.0000,13
+106cf74a-d00e-4d0d-a25a-e8821db1ed7f,Jordan,Jordan 1 Retro High Off-White White,Collaboration,2018,190.0000,2413.0000,12.7000,887,247.0000,14
+dc9743ff-294f-4d31-97bd-21fb53edf9bc,Nike,Nike SB Dunk Low Medicom 1,Collaboration,2004,60.0000,700.0000,11.6667,691,8.0000,15
+62b6c403-b637-4171-acdb-32e8a4d90ad4,Nike,Nike SB Dunk Low Tokyo,Not a collaboration,2004,60.0000,3438.0000,57.3000,517,1.0000,1
+65fa651c-408a-4dc2-bf75-fa129a8bd4ca,Nike,Nike SB Dunk Low Reese Forbes Denim,Not a collaboration,2002,65.0000,3200.0000,49.2308,700,5.0000,2
+d5028234-fca9-448b-8687-1158e6bf822c,Jordan,Jordan 1 OG Chicago (1985),Not a collaboration,1985,65.0000,3023.0000,46.5077,1401,4.0000,3
+a4336f6e-5dfb-4896-aeac-633802402706,Nike,Nike Dunk Low SP Chocolate,Not a collaboration,2002,60.0000,2250.0000,37.5000,809,0.0000,4
+760c5def-2e31-4653-916d-0dd3b2707690,Jordan,Jordan 2 Retro Eminem (The Way I Am),Not a collaboration,2008,110.0000,3300.0000,30.0000,1675,9.0000,5
+8e6e3bdc-7a5e-4885-8250-5f696983f96a,Jordan,Jordan 1 Retro High SoleFly Art Basel Black,Not a collaboration,2018,160.0000,3556.0000,22.2250,521,34.0000,6
+14aaad8c-ef97-4988-968b-e9a0d094dedf,Jordan,Jordan 4 Retro Quai 54,Not a collaboration,2012,160.0000,3000.0000,18.7500,922,2.0000,7
+27715ae9-e519-4458-aa97-7a90f691c557,Nike,Nike Dunk SB Low What the Dunk,Not a collaboration,2007,120.0000,2200.0000,18.3333,1357,24.0000,8
+eba4a1b8-32e0-46b4-a7ed-deeb076bd784,Jordan,Jordan 1 Retro High Rust Pink,Not a collaboration,2017,160.0000,2844.0000,17.7750,837,22.0000,9
+c8086ddd-fc7d-4ef6-8184-a6dc107ac410,Nike,Nike SB Dunk High Paul Brown,Not a collaboration,2003,65.0000,1100.0000,16.9231,578,6.0000,10
+245725fb-f706-4dc0-abc4-39bddd66863a,Nike,Nike Air Max 1 Kid Robot (2005),Not a collaboration,2005,150.0000,2500.0000,16.6667,2411,0.0000,11
+2c030c12-0af9-4aa4-aa1f-bbb337780450,Nike,Nike SB Dunk Low Orange Flash,Not a collaboration,2002,60.0000,1000.0000,16.6667,682,6.0000,12
+55572d45-6868-490a-9d83-25f5199254fc,Jordan,Jordan 5 Retro Tokyo T23,Not a collaboration,2011,206.0000,3200.0000,15.5340,1529,11.0000,13
+3f7531b1-00a8-4fae-83c4-697b09198c20,Nike,Nike SB Dunk Low Shark,Not a collaboration,2002,65.0000,1000.0000,15.3846,562,10.0000,14
+f311b48b-a25a-417c-8f2b-d64da317e273,Nike,Nike Kyrie 3 Ray Gun,Not a collaboration,2018,120.0000,1800.0000,15.0000,935,5.0000,15

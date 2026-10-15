@@ -1,0 +1,67 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": "container",
+  "height": 420,
+  "encoding": {
+    "x": {
+      "type": "quantitative", "title": "Retail price (US$)", "scale": {"domain": [0, 400], "nice": false},
+      "axis": {"format": "$,.0f", "values": [0, 50, 100, 150, 200, 250, 300, 350, 400], "grid": false, "titleColor": "#5C5A73", "titleFontWeight": 500}
+    },
+    "y": {
+      "type": "quantitative", "title": "Typical resale price (US$)", "scale": {"domain": [0, 1500], "nice": false},
+      "axis": {"format": "$,.0f", "values": [0, 250, 500, 750, 1000, 1250, 1500], "gridColor": "#ECEAF6", "titleColor": "#5C5A73", "titleFontWeight": 500}
+    }
+  },
+  "layer": [
+    {
+      "data": {"url": "data/resale_density.csv", "format": {"type": "csv", "parse": {"retail_bin": "number", "resale_bin": "number", "n_models": "number"}}},
+      "transform": [
+        {"calculate": "datum.retail_bin + 20", "as": "retail_end"},
+        {"calculate": "datum.resale_bin + 50", "as": "resale_end"},
+        {"calculate": "'$' + datum.retail_bin + ' to $' + datum.retail_end", "as": "retail_range"},
+        {"calculate": "'$' + datum.resale_bin + ' to $' + datum.resale_end", "as": "resale_range"}
+      ],
+      "mark": {"type": "rect", "stroke": "white", "strokeWidth": 0.5},
+      "encoding": {
+        "x": {"field": "retail_bin"}, "x2": {"field": "retail_end"},
+        "y": {"field": "resale_bin"}, "y2": {"field": "resale_end"},
+        "color": {
+          "field": "n_models", "type": "quantitative", "title": "Number of shoe models",
+          "scale": {"type": "symlog", "range": ["#E8E4FF", "#15131F"]},
+          "legend": {"orient": "bottom", "direction": "horizontal", "gradientLength": 220, "values": [1, 10, 100, 1000], "labelExpr": "format(datum.value, ',')"}
+        },
+        "tooltip": [
+          {"field": "retail_range", "title": "Retail price"},
+          {"field": "resale_range", "title": "Typical resale price"},
+          {"field": "n_models", "type": "quantitative", "title": "Shoe models", "format": ","}
+        ]
+      }
+    },
+    {
+      "data": {"values": [
+        {"x": 0, "y": 0, "line": "Resale = retail price"}, {"x": 400, "y": 400, "line": "Resale = retail price"},
+        {"x": 0, "y": 0, "line": "Resale = 2 × retail price"}, {"x": 400, "y": 800, "line": "Resale = 2 × retail price"}
+      ]},
+      "mark": {"type": "line", "strokeDash": [6, 4], "strokeWidth": 1.6, "color": "#D13A00"},
+      "encoding": {"x": {"field": "x"}, "y": {"field": "y"}, "detail": {"field": "line"}}
+    },
+    {
+      "data": {"values": [
+        {"x": 400, "y": 400, "line": "Resale = retail"}, {"x": 400, "y": 800, "line": "Resale = 2 × retail"}
+      ]},
+      "mark": {"type": "text", "align": "right", "dx": -4, "dy": -10, "fontSize": 12, "fontWeight": 700, "color": "#D13A00"},
+      "encoding": {"x": {"field": "x"}, "y": {"field": "y"}, "text": {"field": "line"}}
+    },
+    {
+      "data": {"values": [{"x": 10, "y": 1450, "t": "Higher up: resells for more than it cost new"}]},
+      "mark": {"type": "text", "align": "left", "fontSize": 12, "fontStyle": "italic", "color": "#5C5A73"},
+      "encoding": {"x": {"field": "x"}, "y": {"field": "y"}, "text": {"field": "t"}}
+    }
+  ],
+  "config": {
+    "font": "DM Sans, 'Helvetica Neue', Arial, sans-serif",
+    "view": {"stroke": null},
+    "axis": {"labelColor": "#15131F", "domainColor": "#D3D0E4", "tickColor": "#D3D0E4"},
+    "legend": {"titleFontWeight": 500, "titleColor": "#5C5A73", "labelColor": "#15131F"}
+  }
+}

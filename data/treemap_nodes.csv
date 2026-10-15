@@ -1,0 +1,25 @@
+id,parent,name,company,usd_m,share,fiscal_year,confidence
+all,,Eight companies,,,,,
+Nike,all,Nike,Nike,,,2026,
+Nike|Jordan,Nike,Jordan,Nike,7034.0,0.0597,2026,high
+Nike|Nike,Nike,Nike,Nike,38188.0,0.3243,2026,high
+Nike|Converse,Nike,Converse,Nike,1174.0,0.01,2026,high
+Deckers,all,Deckers,Deckers,,,2026,
+Deckers|HOKA,Deckers,HOKA,Deckers,2587.3,0.022,2026,high
+Deckers|UGG,Deckers,UGG,Deckers,2738.8,0.0233,2026,high
+Deckers|Other Deckers brands,Deckers,Other Deckers brands,Deckers,146.2,0.0012,2026,high
+Crocs,all,Crocs,Crocs,,,2025,
+Crocs|Crocs,Crocs,Crocs,Crocs,3325.8,0.0282,2025,high
+Crocs|HEYDUDE,Crocs,HEYDUDE,Crocs,714.8,0.0061,2025,high
+ANTA,all,ANTA,ANTA,,,2025,
+ANTA|ANTA,ANTA,ANTA,ANTA,4835.3,0.0411,2025,medium
+ANTA|FILA,ANTA,FILA,ANTA,3960.9,0.0336,2025,high
+ANTA|Other ANTA brands,ANTA,Other ANTA brands,ANTA,2364.7,0.0201,2025,high
+adidas,all,adidas,adidas,,,2025,
+adidas|adidas,adidas,adidas,adidas,28050.9,0.2382,2025,high
+PUMA,all,PUMA,PUMA,,,2025,
+PUMA|PUMA,PUMA,PUMA,PUMA,8249.0,0.07,2025,high
+ASICS,all,ASICS,ASICS,,,2025,
+ASICS|ASICS,ASICS,ASICS,ASICS,5421.7,0.046,2025,high
+Skechers,all,Skechers,Skechers,,,2024,
+Skechers|Skechers,Skechers,Skechers,Skechers,8969.4,0.0762,2024,high

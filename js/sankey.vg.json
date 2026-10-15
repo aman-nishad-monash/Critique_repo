@@ -1,0 +1,155 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "description": "Chart 6. Sankey diagram of Nike Brand revenue in fiscal 2026 (US$ millions), from geographic region (left) to product line (right). Node and band sizes are proportional to revenue. The two-column layout is computed in scripts/company_prep.py and stretched sideways by 1.35 here; Vega draws it with rect marks and the linkpath transform.",
+  "width": 1190,
+  "height": 380,
+  "padding": 0,
+  "autosize": "none",
+  "signals": [
+    {
+      "name": "hover_node",
+      "value": null,
+      "on": [
+        {"events": "@node:pointerover, @node_label:pointerover", "update": "datum.name"},
+        {"events": "@node:pointerout, @node_label:pointerout", "update": "null"}
+      ]
+    }
+  ],
+  "data": [
+    {"name": "sankey", "url": "data/sankey.json", "format": {"type": "json"}},
+    {
+      "name": "nodes",
+      "url": "data/sankey.json",
+      "format": {"type": "json", "property": "nodes"},
+      "transform": [
+        {"type": "formula", "expr": "datum.x0 * 1.35", "as": "x0"},
+        {"type": "formula", "expr": "datum.x1 * 1.35", "as": "x1"}
+      ]
+    },
+    {
+      "name": "links",
+      "url": "data/sankey.json",
+      "format": {"type": "json", "property": "links"},
+      "transform": [
+        {"type": "formula", "expr": "datum.sx * 1.35", "as": "sx"},
+        {"type": "formula", "expr": "datum.tx * 1.35", "as": "tx"},
+        {
+          "type": "linkpath",
+          "orient": "horizontal",
+          "shape": "diagonal",
+          "sourceX": "sx",
+          "sourceY": "sy",
+          "targetX": "tx",
+          "targetY": "ty"
+        }
+      ]
+    }
+  ],
+  "scales": [
+    {
+      "name": "product_colour",
+      "type": "ordinal",
+      "domain": ["Footwear", "Apparel", "Equipment"],
+      "range": ["#FF5A1F", "#9C9AB5", "#D3D0E4"]
+    }
+  ],
+  "marks": [
+    {
+      "name": "link",
+      "type": "path",
+      "from": {"data": "links"},
+      "encode": {
+        "enter": {
+          "path": {"field": "path"},
+          "stroke": {"scale": "product_colour", "field": "target"},
+          "strokeWidth": {"field": "width"},
+          "tooltip": {
+            "signal": "{'From': datum.source, 'To': datum.target, 'Year to May 2026': '$' + format(datum.value, ',.0f') + ' million', 'Year to May 2025': '$' + format(datum.value_fy25, ',.0f') + ' million', 'Change': format(datum.pct_change, '+.1%'), 'Share of the region': format(datum.share_of_region, '.0%')}"
+          }
+        },
+        "update": {
+          "strokeOpacity": {
+            "signal": "hover_node ? (hover_node === datum.source || hover_node === datum.target ? 0.75 : 0.12) : 0.5"
+          }
+        },
+        "hover": {"strokeOpacity": {"value": 0.85}}
+      }
+    },
+    {
+      "name": "node",
+      "type": "rect",
+      "from": {"data": "nodes"},
+      "encode": {
+        "enter": {
+          "x": {"field": "x0"},
+          "x2": {"field": "x1"},
+          "y": {"field": "y0"},
+          "y2": {"field": "y1"},
+          "fill": {
+            "signal": "datum.side === 'product' ? scale('product_colour', datum.name) : '#2B2850'"
+          },
+          "cursor": {"value": "pointer"},
+          "tooltip": {
+            "signal": "{'': datum.name, 'Year to May 2026': '$' + format(datum.value, ',.0f') + ' million', 'Year to May 2025': '$' + format(datum.value_fy25, ',.0f') + ' million', 'Change': format(datum.pct_change, '+.1%')}"
+          }
+        }
+      }
+    },
+    {
+      "name": "node_label",
+      "type": "text",
+      "from": {"data": "nodes"},
+      "encode": {
+        "enter": {
+          "x": {"signal": "datum.side === 'region' ? datum.x0 - 10 : datum.x1 + 10"},
+          "y": {"signal": "(datum.y0 + datum.y1) / 2 - 7"},
+          "align": {"signal": "datum.side === 'region' ? 'right' : 'left'"},
+          "baseline": {"value": "middle"},
+          "text": {"field": "name"},
+          "fontSize": {"value": 13.5},
+          "fontWeight": {"value": 700},
+          "fill": {"value": "#15131F"},
+          "cursor": {"value": "pointer"}
+        }
+      }
+    },
+    {
+      "type": "text",
+      "from": {"data": "nodes"},
+      "interactive": false,
+      "encode": {
+        "enter": {
+          "x": {"signal": "datum.side === 'region' ? datum.x0 - 10 : datum.x1 + 10"},
+          "y": {"signal": "(datum.y0 + datum.y1) / 2 + 10"},
+          "align": {"signal": "datum.side === 'region' ? 'right' : 'left'"},
+          "baseline": {"value": "middle"},
+          "text": {
+            "signal": "'$' + format(datum.value / 1000, ',.1f') + ' bn   ' + format(datum.pct_change, '+.1%') + ' on last year'"
+          },
+          "fontSize": {"value": 12},
+          "fill": {"signal": "datum.pct_change < -0.05 ? '#E5243B' : '#5C5A73'"},
+          "fontWeight": {"signal": "datum.pct_change < -0.05 ? 700 : 400"}
+        }
+      }
+    },
+    {
+      "description": "Callout under the one region with a large drop",
+      "type": "text",
+      "from": {"data": "nodes"},
+      "interactive": false,
+      "encode": {
+        "enter": {
+          "x": {"signal": "datum.x0 - 10"},
+          "y": {"signal": "(datum.y0 + datum.y1) / 2 + 26"},
+          "align": {"value": "right"},
+          "baseline": {"value": "middle"},
+          "text": {"signal": "datum.side === 'region' && datum.pct_change < -0.05 ? 'The only large drop' : ''"},
+          "fontSize": {"value": 12},
+          "fontStyle": {"value": "italic"},
+          "fill": {"value": "#E5243B"}
+        }
+      }
+    }
+  ],
+  "config": {"text": {"font": "DM Sans, 'Helvetica Neue', Arial, sans-serif"}}
+}

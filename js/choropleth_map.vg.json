@@ -1,0 +1,115 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": "container",
+  "height": 300,
+  "params": [
+    {
+      "name": "Year_selection",
+      "value": 2024,
+      "bind": {"input": "range", "min": 2002, "max": 2024, "step": 1, "name": "Year: "}
+    }
+  ],
+  "projection": {
+    "type": "equalEarth",
+    "scale": {"expr": "min(width / 5.4133, height / 2.3783)"},
+    "translate": {"expr": "[width / 2, height / 2 + min(width / 5.4133, height / 2.3783) * 0.12825]"}
+  },
+  "layer": [
+    {
+      "data": {"url": "data/oceans.topojson", "format": {"type": "topojson", "feature": "oceans"}},
+      "mark": {"type": "geoshape", "fill": "#DDE3FF", "clip": true}
+    },
+    {
+      "data": {
+        "url": "data/ne_110m_admin_0_countries.topojson",
+        "format": {"type": "topojson", "feature": "ne_110m_admin_0_countries"}
+      },
+      "transform": [
+        {"filter": "datum.properties.ADM0_A3 != 'ATA'"},
+        {"calculate": "'No footwear trade data for ' + datum.properties.NAME", "as": "note"}
+      ],
+      "mark": {"type": "geoshape", "fill": "#E9E7F2", "stroke": "white", "strokeWidth": 0.6, "clip": true},
+      "encoding": {"tooltip": {"field": "note", "type": "nominal"}}
+    },
+    {
+      "data": {
+        "url": "data/baci_country_year.csv",
+        "format": {
+          "type": "csv",
+          "parse": {"year": "number", "lon": "number", "lat": "number", "exports_usd_m": "number",
+                    "imports_usd_m": "number", "balance_ratio": "number"}
+        }
+      },
+      "transform": [
+        {"filter": "datum.year == Year_selection"},
+        {"calculate": "datum.exports_usd_m + datum.imports_usd_m", "as": "total_trade"},
+        {"calculate": "datum.exports_usd_m - datum.imports_usd_m", "as": "net_trade"}
+      ],
+      "encoding": {
+        "tooltip": [
+          {"field": "country", "type": "nominal", "title": "Country"},
+          {"field": "year", "type": "quantitative", "title": "Year", "format": "d"},
+          {"field": "balance_ratio", "type": "quantitative", "title": "Balance (-100% to +100%)", "format": "+.0%"},
+          {"field": "exports_usd_m", "type": "quantitative", "title": "Exports (US$ million)", "format": ",.0f"},
+          {"field": "imports_usd_m", "type": "quantitative", "title": "Imports (US$ million)", "format": ",.0f"}
+        ]
+      },
+      "layer": [
+        {
+          "transform": [
+            {"calculate": "datum.iso3 == 'SSD' ? 'SDS' : datum.iso3 == 'PSE' ? 'PSX' : datum.iso3 == 'ESH' ? 'SAH' : datum.iso3", "as": "map_code"},
+            {
+              "lookup": "map_code",
+              "from": {
+                "data": {
+                  "url": "data/ne_110m_admin_0_countries.topojson",
+                  "format": {"type": "topojson", "feature": "ne_110m_admin_0_countries"}
+                },
+                "key": "properties.ADM0_A3"
+              },
+              "as": "geo"
+            }
+          ],
+          "mark": {"type": "geoshape", "stroke": "white", "strokeWidth": 0.6, "clip": true},
+          "encoding": {
+            "shape": {"field": "geo", "type": "geojson"},
+            "color": {
+              "condition": {"test": "datum.total_trade < 10", "value": "#D3D0E4"},
+              "field": "balance_ratio",
+              "type": "quantitative",
+              "title": "Trade balance",
+              "scale": {"domain": [-1, 1], "domainMid": 0, "range": ["#D81B72", "#FFF6E5", "#2336D9"], "interpolate": "lab"},
+              "legend": {
+                "orient": "bottom", "direction": "horizontal", "gradientLength": 420, "gradientThickness": 12,
+                "values": [-1, -0.5, 0, 0.5, 1],
+                "labelExpr": "datum.value == 1 ? 'Exports only' : datum.value == -1 ? 'Imports only' : datum.value == 0 ? 'Balanced' : format(datum.value, '+.0%')"
+              }
+            }
+          }
+        },
+        {
+          "transform": [
+            {"window": [{"op": "row_number", "as": "export_rank"}], "sort": [{"field": "net_trade", "order": "descending"}]},
+            {"window": [{"op": "row_number", "as": "import_rank"}], "sort": [{"field": "net_trade", "order": "ascending"}]},
+            {"filter": "datum.export_rank <= 3 || datum.import_rank <= 3"}
+          ],
+          "encoding": {
+            "longitude": {"field": "lon", "type": "quantitative"},
+            "latitude": {"field": "lat", "type": "quantitative"},
+            "text": {"field": "country"}
+          },
+          "layer": [
+            {"mark": {"type": "text", "stroke": "white", "strokeWidth": 3, "strokeJoin": "round", "clip": true}},
+            {"mark": {"type": "text", "color": "#15131F", "clip": true}}
+          ]
+        }
+      ]
+    }
+  ],
+  "config": {
+    "font": "DM Sans, 'Helvetica Neue', Arial, sans-serif",
+    "view": {"stroke": null},
+    "text": {"font": "DM Sans, 'Helvetica Neue', Arial, sans-serif", "fontSize": 12, "fontWeight": 700},
+    "legend": {"labelFontSize": 12.5, "titleFontSize": 12.5, "titleColor": "#5C5A73", "labelColor": "#15131F"}
+  }
+}

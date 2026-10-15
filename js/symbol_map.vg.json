@@ -1,0 +1,185 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "params": [
+    {
+      "name": "Year_selection",
+      "value": 2024,
+      "bind": {"input": "range", "min": 2002, "max": 2024, "step": 1, "name": "Year: "}
+    }
+  ],
+  "spacing": 30,
+  "hconcat": [
+    {
+      "width": 820,
+      "height": 400,
+      "projection": {"type": "equalEarth", "scale": 151.5, "translate": [410, 219.4]},
+      "layer": [
+        {
+          "data": {"url": "data/oceans.topojson", "format": {"type": "topojson", "feature": "oceans"}},
+          "mark": {"type": "geoshape", "fill": "#DDE3FF", "clip": true}
+        },
+        {
+          "data": {
+            "url": "data/ne_110m_admin_0_countries.topojson",
+            "format": {"type": "topojson", "feature": "ne_110m_admin_0_countries"}
+          },
+          "transform": [{"filter": "datum.properties.ADM0_A3 != 'ATA'"}],
+          "mark": {"type": "geoshape", "fill": "white", "stroke": "#B9BEE0", "strokeWidth": 0.5, "clip": true}
+        },
+        {
+          "data": {
+            "url": "data/baci_country_year.csv",
+            "format": {"type": "csv", "parse": {"year": "number", "lon": "number", "lat": "number", "exports_usd_m": "number", "imports_usd_m": "number"}}
+          },
+          "transform": [
+            {"filter": "datum.year == Year_selection"},
+            {"fold": ["exports_usd_m", "imports_usd_m"], "as": ["flow_key", "value"]},
+            {"calculate": "datum.flow_key == 'exports_usd_m' ? 'Exporter' : 'Importer'", "as": "flow"},
+            {"joinaggregate": [{"op": "sum", "field": "value", "as": "world_total"}], "groupby": ["flow"]},
+            {"calculate": "datum.value / datum.world_total", "as": "world_share"},
+            {"window": [{"op": "row_number", "as": "rank"}], "sort": [{"field": "value", "order": "descending"}], "groupby": ["flow"]},
+            {"filter": "datum.rank <= 5"}
+          ],
+          "encoding": {
+            "longitude": {"field": "lon", "type": "quantitative"},
+            "latitude": {"field": "lat", "type": "quantitative"},
+            "tooltip": [
+              {"field": "country", "type": "nominal", "title": "Country"},
+              {"field": "year", "type": "quantitative", "title": "Year", "format": "d"},
+              {"field": "flow", "type": "nominal", "title": "Top five as"},
+              {"field": "rank", "type": "quantitative", "title": "Rank"},
+              {"field": "value", "type": "quantitative", "title": "Value (US$ million)", "format": ",.0f"},
+              {"field": "world_share", "type": "quantitative", "title": "Share of world total", "format": ".1%"}
+            ]
+          },
+          "layer": [
+            {
+              "params": [
+                {"name": "flow_highlight", "select": {"type": "point", "fields": ["flow"]}, "bind": "legend"}
+              ],
+              "mark": {"type": "circle", "stroke": "white", "strokeWidth": 1.2, "clip": true},
+              "encoding": {
+                "size": {
+                  "field": "value",
+                  "type": "quantitative",
+                  "title": "Trade value (US$)",
+                  "scale": {"domain": [0, 50000], "range": [0, 4400]},
+                  "legend": {
+                    "orient": "none", "legendX": 6, "legendY": 165, "values": [1000, 10000, 40000],
+                    "labelExpr": "format(datum.value / 1000, ',.0f') + ' billion'",
+                    "symbolFillColor": "#9C9AB5", "symbolOpacity": 0.35, "symbolStrokeColor": "#5C5A73"
+                  }
+                },
+                "color": {
+                  "field": "flow",
+                  "type": "nominal",
+                  "title": "Click to highlight",
+                  "legend": {"orient": "none", "legendX": 6, "legendY": 95, "symbolType": "circle", "titleLimit": 220}
+                },
+                "opacity": {"condition": {"param": "flow_highlight", "value": 0.85}, "value": 0.12},
+                "order": {"field": "value", "sort": "descending"}
+              }
+            },
+            {
+              "transform": [{"filter": "datum.rank <= 2"}],
+              "encoding": {
+                "text": {"field": "country"},
+                "opacity": {"condition": {"param": "flow_highlight", "value": 1}, "value": 0.15}
+              },
+              "layer": [
+                {"mark": {"type": "text", "dy": -2, "stroke": "white", "strokeWidth": 3, "strokeJoin": "round", "clip": true}},
+                {"mark": {"type": "text", "dy": -2, "color": "#15131F", "clip": true}}
+              ]
+            }
+          ]
+        },
+        {
+          "description": "Callout: Vietnam's rise, with a leader line from the text to Vietnam",
+          "data": {"values": [{"lon": 104, "lat": 10, "lon2": 88, "lat2": -14, "t": ["Vietnam: 6.6% of world", "exports in 2002, 23.6% in 2024"]}]},
+          "layer": [
+            {
+              "mark": {"type": "rule", "color": "#15131F", "strokeWidth": 0.8},
+              "encoding": {
+                "longitude": {"field": "lon", "type": "quantitative"}, "latitude": {"field": "lat", "type": "quantitative"},
+                "longitude2": {"field": "lon2"}, "latitude2": {"field": "lat2"}
+              }
+            },
+            {
+              "mark": {"type": "text", "align": "left", "baseline": "top", "dy": 3, "dx": -4, "fontSize": 11.5, "fontWeight": 500, "lineHeight": 14, "color": "#15131F"},
+              "encoding": {
+                "longitude": {"field": "lon2", "type": "quantitative"}, "latitude": {"field": "lat2", "type": "quantitative"},
+                "text": {"field": "t"}
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "width": 300,
+      "height": 400,
+      "data": {
+        "url": "data/baci_country_year.csv",
+        "format": {"type": "csv", "parse": {"year": "number", "exports_usd_m": "number", "imports_usd_m": "number"}}
+      },
+      "transform": [
+        {"filter": "datum.year == Year_selection"},
+        {"fold": ["exports_usd_m", "imports_usd_m"], "as": ["flow_key", "value"]},
+        {"calculate": "datum.flow_key == 'exports_usd_m' ? 'Exporter' : 'Importer'", "as": "flow"},
+        {"joinaggregate": [{"op": "sum", "field": "value", "as": "world_total"}], "groupby": ["flow"]},
+        {"window": [{"op": "row_number", "as": "rank"}], "sort": [{"field": "value", "order": "descending"}], "groupby": ["flow"]},
+        {"filter": "datum.rank <= 5"},
+        {"joinaggregate": [{"op": "sum", "field": "value", "as": "top5_total"}], "groupby": ["flow"]},
+        {"calculate": "(datum.flow == 'Exporter' ? 'E' : 'I') + datum.rank", "as": "row"},
+        {"calculate": "datum.rank + '   ' + datum.country", "as": "name_label"},
+        {"calculate": "'$' + format(datum.value / 1000, ',.1f') + ' bn'", "as": "value_label"}
+      ],
+      "encoding": {
+        "y": {
+          "field": "row",
+          "type": "ordinal",
+          "axis": null,
+          "scale": {"domain": ["Eh", "E1", "E2", "E3", "E4", "E5", "Es", "gap", "Ih", "I1", "I2", "I3", "I4", "I5", "Is"], "paddingInner": 0}
+        },
+        "color": {"field": "flow", "type": "nominal", "legend": null},
+        "opacity": {"condition": {"param": "flow_highlight", "value": 1}, "value": 0.25}
+      },
+      "layer": [
+        {
+          "mark": {"type": "bar", "height": 3, "yOffset": 9, "cornerRadius": 1.5},
+          "encoding": {"x": {"field": "value", "type": "quantitative", "scale": {"domain": [0, 50000]}, "axis": null}}
+        },
+        {
+          "mark": {"type": "text", "align": "left", "fontSize": 13.5, "fontWeight": 400, "dy": -3},
+          "encoding": {"x": {"value": 0}, "text": {"field": "name_label"}, "color": {"value": "#15131F"}}
+        },
+        {
+          "mark": {"type": "text", "align": "right", "fontSize": 13.5, "dy": -3},
+          "encoding": {"x": {"value": 300}, "text": {"field": "value_label"}}
+        },
+        {
+          "transform": [
+            {"filter": "datum.rank == 1"},
+            {"calculate": "(datum.flow == 'Exporter' ? 'E' : 'I') + 's'", "as": "row"},
+            {"calculate": "'Top five = ' + format(datum.top5_total / datum.world_total, '.0%') + ' of world ' + (datum.flow == 'Exporter' ? 'exports' : 'imports')", "as": "summary"}
+          ],
+          "mark": {"type": "text", "align": "left", "fontSize": 12.5, "fontWeight": 400, "fontStyle": "italic", "dy": 2},
+          "encoding": {"x": {"value": 0}, "text": {"field": "summary"}, "color": {"value": "#5C5A73"}}
+        },
+        {
+          "data": {"values": [{"row": "Eh", "h": "TOP 5 EXPORTERS", "flow": "Exporter"}, {"row": "Ih", "h": "TOP 5 IMPORTERS", "flow": "Importer"}]},
+          "mark": {"type": "text", "align": "left", "letterSpacing": 1.2},
+          "encoding": {"x": {"value": 0}, "text": {"field": "h"}}
+        }
+      ]
+    }
+  ],
+  "resolve": {"scale": {"x": "independent"}, "legend": {"color": "independent"}},
+  "config": {
+    "font": "DM Sans, 'Helvetica Neue', Arial, sans-serif",
+    "view": {"stroke": null},
+    "range": {"category": ["#2D4BFF", "#FF3D8B"]},
+    "text": {"font": "DM Sans, 'Helvetica Neue', Arial, sans-serif", "fontSize": 12, "fontWeight": 700},
+    "legend": {"labelFontSize": 12.5, "titleFontSize": 12.5, "titleColor": "#5C5A73", "labelColor": "#15131F", "rowPadding": 5}
+  }
+}
